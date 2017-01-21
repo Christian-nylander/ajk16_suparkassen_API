@@ -48,3 +48,16 @@ app.post('/api/products', (req, res) => {
         }
     })
 });
+
+app.get('/api/products/search', (req, res) => {
+    let q = req.query.q;
+    let pattern = new RegExp(q, "i");
+    Product.find({$or:[ { type: { $regex: pattern }}, { name: { $regex: pattern }}]})
+        .exec((err, products) => {
+            if (err) {
+                res.send(err)
+            } else {
+                res.json(products);
+            }
+        })
+});

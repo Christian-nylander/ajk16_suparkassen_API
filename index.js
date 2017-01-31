@@ -10,7 +10,7 @@ var vhost = require('vhost');
 var admin = express.Router();
 var credentials = require('./credentials');
 
-mongoose.connect('mongodb://admin:admin@ds117189.mlab.com:17189/suparkassen');
+mongoose.connect('mongodb://localhost/lena');
 
 app.use(jsonParser);
 app.use(function(req, res, next) {
@@ -51,8 +51,8 @@ app.post('/api/products', (req, res) => {
 });
 
 app.get('/api/products/search', (req, res) => {
-    let q = req.query.q;
-    let pattern = new RegExp(q, "i");
+    var q = req.query.q;
+    var pattern = new RegExp(q, "i");
     Product.find({$or:[ { type: { $regex: pattern }}, { name: { $regex: pattern }}]})
         .exec((err, products) => {
             if (err) {
@@ -75,9 +75,6 @@ app.post('/api/payment', (req, res) => {
             res.json(payment);
 
             //mail skicka obj //payment.name bla till mailet payment.totalprice
-            //Res???
-            //"STATUS KOD" RES.SEND "201"=CREATED
-
             app.use(vhost('admin.*', admin));
 
             var mailTransport = nodemailer.createTransport('SMTP',{
